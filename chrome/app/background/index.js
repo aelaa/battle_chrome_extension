@@ -5,8 +5,6 @@ import {settings} from '../settings';
 
 var messages = {'opened': [], 'started': []};
 
-window.messages = messages;
-
 const helpers = {
   deleteMessage: (type, msg) => {
     messages[type] = _.reject(messages[type], {id: msg.id});
@@ -35,49 +33,50 @@ const helpers = {
 const handlers = {
   openGame: (msg) => {
     helpers.addMessage('opened', msg);
+    window.messages = messages;
   },
 
   startGame: (msg) => {
     helpers.deleteMessage('opened', msg);
     helpers.addMessage('started', msg);
+    window.messages = messages;
   },
 
   finishGame: (msg) => {
     if (!helpers.deleteMessage('started', msg)) {
       helpers.deleteMessage('opened', msg);
     }
+    window.messages = messages;
   }
 };
 
 $(() => {
-  establish_connection = () => {
-    const bullet = $.bullet(settings.api_call);
-    bullet.onopen = () => {
-      console.log('bullet: opened');
-      helpers.clearMessages();
-      helpers.setBadgeText();
-    };
+  const bullet = $.bullet(settings.api_call);
+  bullet.onopen = () => {
+    console.log('bullet: opened');
+    helpers.clearMessages();
+    helpers.setBadgeText();
+  };
 
-    bullet.ondisconnect = () => {
-      console.log('bullet: disconnected');
-      helpers.clearMessages();
-      helpers.setBadgeText();
-    };
+  bullet.ondisconnect = () => {
+    console.log('bullet: disconnected');
+    helpers.clearMessages();
+    helpers.setBadgeText();
+  };
 
-    bullet.onclose = () => {
-      console.log('bullet: closed');
-      helpers.clearMessages();
-      helpers.setBadgeText();
-    };
+  bullet.onclose = () => {
+    console.log('bullet: closed');
+    helpers.clearMessages();
+    helpers.setBadgeText();
+  };
 
-    bullet.onmessage = (e) => {
-      let response = $.parseJSON(e.data);
-      handlers[response.handler](response.data);
-      helpers.setBadgeText();
-    };
+  bullet.onmessage = (e) => {
+    let response = $.parseJSON(e.data);
+    handlers[response.handler](response.data);
+    helpers.setBadgeText();
+  };
 
-    bullet.onheartbeat = () => {
-      bullet.send('ping');
-    };
-  }();
+  bullet.onheartbeat = () => {
+    bullet.send('ping');
+  };
 });

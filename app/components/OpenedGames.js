@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import OpenedGame from './OpenedGame';
 
 export default class OpenedGames extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {messages: []};
+  }
+
   componentWillMount() {
     this.getMessagesFromServer.apply(this);
     setInterval(this.getMessagesFromServer.bind(this), 500);
@@ -13,7 +18,7 @@ export default class OpenedGames extends Component {
   }
 
   render() {
-    const messages = this.props.messages;
+    const messages = this.state.messages;
     return (
       <dl>
         <dt>

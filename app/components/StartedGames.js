@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 
 export default class StartedGames extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {messages: []}
-    StartedGames.context = this;
+  constructor(props) {
+    super(props);
+    this.state = {messages: []};
   }
 
   componentWillMount() {
@@ -14,20 +14,19 @@ export default class StartedGames extends Component {
 
   getMessagesFromServer() {
     let messages = chrome.extension.getBackgroundPage().messages;
-    console.warn(messages);
     this.setState({messages: messages[this.props.type]});
   }
 
   render () {
-    const messages = this.props.messages;
+    const messages = this.state.messages;
     return (
       <dl>
         <dt><h4>Started games <span className='badge'>{messages.length}</span></h4></dt>
         {messages.length > 0 ?
           messages.map(function(message) {
-          href = settings.host + '/games/' + message.id;
-          nicknames = _.pluck(message.players, 'nickname');
-          playerLangs = _.pluck(message.players, 'lang');
+          var href = 'https://wddx.ru/games/' + message.id;
+          var nicknames = _.pluck(message.players, 'nickname');
+          var playerLangs = _.pluck(message.players, 'lang');
 
           return (
             <dd>

@@ -2,7 +2,7 @@ import cx from 'classnames';
 
 const OpenedGame = (props) => {
   const message = props.message;
-  let href = settings.host + '/games/' + message.id + '/join';
+  let href = 'http://wddx.ru/games/' + message.id + '/join';
 
   return (
     <div>
