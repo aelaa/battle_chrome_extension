@@ -1,24 +1,35 @@
+import React, { Component } from 'react';
 import OpenedGame from './OpenedGame';
 
-const OpenedGames = (props) => {
-  const messages = props.messages;
-  return (
-    <dl>
-      <dt>
-        <h4>Opened games <span className='badge'>{messages.length}</span></h4>
-      </dt>
+export default class OpenedGames extends Component {
+  componentWillMount() {
+    this.getMessagesFromServer.apply(this);
+    setInterval(this.getMessagesFromServer.bind(this), 500);
+  }
 
-      {
-        messages.length > 0 ?
-          messages.map((message) => {
+  getMessagesFromServer() {
+    let messages = chrome.extension.getBackgroundPage().messages;
+    this.setState({messages: messages[this.props.type]});
+  }
+
+  render() {
+    const messages = this.props.messages;
+    return (
+      <dl>
+        <dt>
+          <h4>Opened games <span className='badge'>{messages.length}</span></h4>
+        </dt>
+
+        {
+          messages.length > 0 ?
+            messages.map((message) => {
             return (
               <dd><OpenedGame key={message.id} message={message} /></dd>
               );
           }, this)
-          : ''
-      }
-    </dl>
-  );
+            : ''
+        }
+      </dl>
+    );
+  }
 };
-
-export default OpenedGames;

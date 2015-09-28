@@ -3,7 +3,9 @@ import _ from 'lodash';
 import './bullet';
 import {settings} from '../settings';
 
-let messages = {'opened': [], 'started': []};
+var messages = {'opened': [], 'started': []};
+
+window.messages = messages;
 
 const helpers = {
   deleteMessage: (type, msg) => {
